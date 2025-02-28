@@ -9,6 +9,7 @@ import {console} from "forge-std/console.sol";
 
 contract Factory {
     struct Funding {
+        address founder;
         string name;
         string symbol;
         uint256 totalSupply;
@@ -43,12 +44,18 @@ contract Factory {
     }
 
     function createFunding(
+        address founder,
         string memory name,
         string memory symbol,
         uint256 totalSupply,
         uint256 liqTarget
     ) external returns(uint256 id) {
+        if (founder != address(0)) {
+            require(vc.isRegistered(founder), "Founder not register");
+        }
+
         Funding storage funding = fundings[id = fundingsCount++];
+        funding.founder = founder;
         funding.name = name;
         funding.symbol = symbol;
         funding.totalSupply = totalSupply;
