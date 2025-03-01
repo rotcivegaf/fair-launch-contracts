@@ -24,7 +24,6 @@ contract Factory {
     }
 
     IUniswapV2Router02 immutable public router;
-    IVC public vc = IVC(0x96c33CE8A28F76f24B83b156828A65Ccd0452CE7);
     uint256 public deltaLaunch = 30 minutes;
     uint256 public deltaVestingTime = 30 days;
 
@@ -44,18 +43,13 @@ contract Factory {
     }
 
     function createFunding(
-        address founder,
         string memory name,
         string memory symbol,
         uint256 totalSupply,
         uint256 liqTarget
     ) external returns(uint256 id) {
-        if (founder != address(0)) {
-            require(vc.isRegistered(founder), "Founder not register");
-        }
-
         Funding storage funding = fundings[id = fundingsCount++];
-        funding.founder = founder;
+        funding.founder = msg.sender;
         funding.name = name;
         funding.symbol = symbol;
         funding.totalSupply = totalSupply;
@@ -106,13 +100,13 @@ contract Factory {
 
     function createToken(
         uint256 id
-    ) external returns(Token token) {
+    ) public returns(Token token) {
         Funding storage funding = fundings[id];
 
         require(funding.totalFund >= funding.liqTarget, "No funds");
         require(block.timestamp >= funding.launchTime, "No launch time");
 
-        token = new Token(
+        token = new Token{salt: bytes32(id)}(
             funding.name, 
             funding.symbol,
             funding.totalSupply
@@ -120,14 +114,15 @@ contract Factory {
 
         // add liquidity to uni
         token.approve(address(router), funding.totalSupply / 2);
+        // @todo use plain add liquidity to avoid issues
         router.addLiquidityETH{
             value: funding.totalFund
         } (
             address(token),
             funding.totalSupply / 2,
-            funding.totalSupply / 2, // amountTokenMin
-            funding.totalFund, // amountETHMin
-            address(this),
+            0, // amountTokenMin
+            0, // amountETHMin
+            address(0xdead),
             block.timestamp
         );
 

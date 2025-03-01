@@ -23,7 +23,6 @@ contract FactoryTest is Test {
 
     function test_createFunding() public {
         uint256 id = factory.createFunding(
-            address(0),
             "test",
             "TEST",
             100 ether,
@@ -43,7 +42,6 @@ contract FactoryTest is Test {
             bool created
         ) = factory.fundings(id);
 
-        assert(founder == address(0));
         assert(keccak256(abi.encode(name)) == keccak256(abi.encode("test")));
         assert(keccak256(abi.encode(symbol)) == keccak256(abi.encode("TEST")));
         assert(totalSupply == 100 ether);
@@ -65,7 +63,6 @@ contract FactoryTest is Test {
 
         address registerUser = 0xB6f224ccEAbb0559bE8D97e559932CeC1Eb0d244;
         uint256 id = factory.createFunding(
-            registerUser,
             "test",
             "TEST",
             100 ether,
@@ -85,7 +82,6 @@ contract FactoryTest is Test {
             bool created
         ) = factory.fundings(id);
 
-        assert(founder == registerUser);
         assert(keccak256(abi.encode(name)) == keccak256(abi.encode("test")));
         assert(keccak256(abi.encode(symbol)) == keccak256(abi.encode("TEST")));
         assert(totalSupply == 100 ether);
@@ -98,7 +94,6 @@ contract FactoryTest is Test {
 
     function test_fund() public {
         uint256 id = factory.createFunding(
-            address(0),
             "test",
             "TEST",
             100 ether,
@@ -134,7 +129,7 @@ contract FactoryTest is Test {
 
     function test_fundFull() public {
         uint256 id = factory.createFunding(
-            address(0),
+
             "test",
             "TEST",
             100 ether,
@@ -167,7 +162,6 @@ contract FactoryTest is Test {
 
     function test_fundAfterFull() public {
         uint256 id = factory.createFunding(
-            address(0),
             "test",
             "TEST",
             100 ether,
@@ -202,7 +196,6 @@ contract FactoryTest is Test {
 
     function test_quitFund() public {
         uint256 id = factory.createFunding(
-            address(0),
             "test",
             "TEST",
             100 ether,
@@ -241,7 +234,6 @@ contract FactoryTest is Test {
         vm.deal(userB, 2 ether);
 
         uint256 id = factory.createFunding(
-            address(0),
             "test",
             "TEST",
             100 ether,
@@ -296,7 +288,6 @@ contract FactoryTest is Test {
         vm.deal(userB, 2 ether);
 
         uint256 id = factory.createFunding(
-            address(0),
             "test",
             "TEST",
             4 ether,
