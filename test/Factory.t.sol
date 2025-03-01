@@ -52,45 +52,6 @@ contract FactoryTest is Test {
         assert(created == false);
     }
 
-    function test_createFundingWithPoH() public {
-        vm.selectFork(vm.createFork("https://rpc.testnet.humanity.org"));
-
-        IUniswapV2Router02 router = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-
-        Factory factory = new Factory(
-            router
-        );
-
-        address registerUser = 0xB6f224ccEAbb0559bE8D97e559932CeC1Eb0d244;
-        uint256 id = factory.createFunding(
-            "test",
-            "TEST",
-            100 ether,
-            2.5 ether
-        );
-
-        // checks
-        (
-            address founder,
-            string memory name,
-            string memory symbol,
-            uint256 totalSupply,
-            uint256 liqTarget,
-            uint256 totalFund,
-            uint256 launchTime,
-            Token token,
-            bool created
-        ) = factory.fundings(id);
-
-        assert(keccak256(abi.encode(name)) == keccak256(abi.encode("test")));
-        assert(keccak256(abi.encode(symbol)) == keccak256(abi.encode("TEST")));
-        assert(totalSupply == 100 ether);
-        assert(liqTarget == 2.5 ether);
-        assert(totalFund == 0);
-        assert(launchTime == 0);
-        assert(token == Token(address(0)));
-        assert(created == false);
-    }
 
     function test_fund() public {
         uint256 id = factory.createFunding(

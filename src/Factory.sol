@@ -32,6 +32,8 @@ contract Factory {
 
     constructor (IUniswapV2Router02 _router) {
         router = _router;
+        // safe check to ensure that router is deployed
+        require(_router.WETH() != address(0), "WETH");
     }
 
     function fundersBalances(uint256 id, address who) external view returns(uint256) {
