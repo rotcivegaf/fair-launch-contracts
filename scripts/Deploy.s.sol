@@ -11,9 +11,12 @@ contract Deploy is Script {
     function run() public returns (Factory factory) {
         console.log("Deploying...");
 
+        // https://sepolia.drpc.org
         // sepolia 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3
+        // https://docs.uniswap.org/contracts/v2/reference/smart-contracts/v2-deployments
         factory = new Factory(
             IUniswapV2Router02(0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3)
         );
+        
     }
 }
